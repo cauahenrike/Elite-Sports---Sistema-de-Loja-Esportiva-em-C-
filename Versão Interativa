@@ -1,1 +1,632 @@
-...
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace EliteSports
+{
+    // =====================================================
+    // CLASSE PRODUTO
+    // =====================================================
+
+    public class Produto
+    {
+        public string Nome { get; set; }
+        public string Categoria { get; set; }
+        public string Cor { get; set; }
+        public string Tamanho { get; set; }
+        public decimal Preco { get; set; }
+        public int Estoque { get; set; }
+
+        public virtual void ExibirDetalhes()
+        {
+            Console.WriteLine("----------------------------------");
+            Console.WriteLine("Produto: " + Nome);
+            Console.WriteLine("Categoria: " + Categoria);
+            Console.WriteLine("Cor: " + Cor);
+            Console.WriteLine("Tamanho: " + Tamanho);
+            Console.WriteLine("Preço: R$" + Preco);
+            Console.WriteLine("Estoque: " + Estoque);
+            Console.WriteLine("----------------------------------");
+        }
+    }
+
+    // =====================================================
+    // CLASSE USUÁRIO
+    // =====================================================
+
+    public class Usuario
+    {
+        public string Nome { get; set; }
+        public string Email { get; set; }
+        public string Senha { get; set; }
+
+        public bool FazerLogin(string email, string senha)
+        {
+            return Email == email && Senha == senha;
+        }
+    }
+
+    // =====================================================
+    // ITEM DO CARRINHO
+    // =====================================================
+
+    public class ItemCarrinho
+    {
+        public Produto Produto { get; set; }
+        public int Quantidade { get; set; }
+
+        public decimal CalcularSubtotal()
+        {
+            return Produto.Preco * Quantidade;
+        }
+    }
+
+    // =====================================================
+    // CARRINHO
+    // =====================================================
+
+    public class Carrinho
+    {
+        public List<ItemCarrinho> Itens = new List<ItemCarrinho>();
+
+        public void AdicionarProduto(Produto produto, int quantidade)
+        {
+            ItemCarrinho item = new ItemCarrinho();
+
+            item.Produto = produto;
+            item.Quantidade = quantidade;
+
+            Itens.Add(item);
+
+            Console.WriteLine();
+            Console.WriteLine(produto.Nome + " adicionado ao carrinho!");
+            Console.WriteLine();
+        }
+
+        public void ExibirCarrinho()
+        {
+            Console.WriteLine();
+            Console.WriteLine("========== CARRINHO ==========");
+
+            decimal total = 0;
+
+            foreach (var item in Itens)
+            {
+                decimal subtotal = item.CalcularSubtotal();
+
+                Console.WriteLine("Produto: " + item.Produto.Nome);
+                Console.WriteLine("Quantidade: " + item.Quantidade);
+                Console.WriteLine("Subtotal: R$" + subtotal);
+                Console.WriteLine();
+
+                total += subtotal;
+            }
+
+            Console.WriteLine("TOTAL: R$" + total);
+            Console.WriteLine("==============================");
+            Console.WriteLine();
+        }
+
+        public decimal CalcularTotal()
+        {
+            decimal total = 0;
+
+            foreach (var item in Itens)
+            {
+                total += item.CalcularSubtotal();
+            }
+
+            return total;
+        }
+    }
+
+    // =====================================================
+    // PAGAMENTO
+    // =====================================================
+
+    public class Pagamento
+    {
+        public string MetodoPagamento { get; set; }
+
+        public void RealizarPagamento()
+        {
+            Console.WriteLine();
+            Console.WriteLine("Pagamento realizado com sucesso!");
+            Console.WriteLine("Método: " + MetodoPagamento);
+            Console.WriteLine();
+        }
+    }
+
+    // =====================================================
+    // PEDIDO
+    // =====================================================
+
+    public class Pedido
+    {
+        public Usuario Cliente { get; set; }
+        public decimal TotalPedido { get; set; }
+        public string Status { get; set; }
+
+        public void FinalizarPedido()
+        {
+            Console.WriteLine();
+            Console.WriteLine("==================================");
+            Console.WriteLine("PEDIDO FINALIZADO COM SUCESSO!");
+            Console.WriteLine("Cliente: " + Cliente.Nome);
+            Console.WriteLine("Status: " + Status);
+            Console.WriteLine("Valor Total: R$" + TotalPedido);
+            Console.WriteLine("==================================");
+            Console.WriteLine();
+        }
+    }
+
+    // =====================================================
+    // PROGRAMA PRINCIPAL
+    // =====================================================
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.OutputEncoding = Encoding.UTF8;
+
+            Console.WriteLine("======================================");
+            Console.WriteLine("           ELITE SPORTS");
+            Console.WriteLine(" Loja Oficial Esportiva - Copa 2026");
+            Console.WriteLine("======================================");
+            Console.WriteLine();
+
+            // =====================================================
+            // CADASTRO
+            // =====================================================
+
+            Usuario usuario = new Usuario();
+
+            Console.WriteLine("========== CADASTRO ==========");
+
+            Console.Write("Digite seu nome: ");
+            usuario.Nome = Console.ReadLine();
+
+            Console.Write("Crie seu email: ");
+            usuario.Email = Console.ReadLine();
+
+            Console.Write("Crie sua senha: ");
+            usuario.Senha = Console.ReadLine();
+
+            Console.WriteLine();
+            Console.WriteLine("Conta criada com sucesso!");
+            Console.WriteLine();
+
+            // =====================================================
+            // LOGIN
+            // =====================================================
+
+            int tentativas = 0;
+            bool login = false;
+
+            Console.WriteLine("========== LOGIN ==========");
+
+            while (tentativas < 3)
+            {
+                Console.Write("Digite seu email: ");
+                string email = Console.ReadLine();
+
+                Console.Write("Digite sua senha: ");
+                string senha = Console.ReadLine();
+
+                login = usuario.FazerLogin(email, senha);
+
+                if (login)
+                {
+                    break;
+                }
+
+                tentativas++;
+
+                Console.WriteLine();
+                Console.WriteLine("Email ou senha incorretos!");
+                Console.WriteLine("Tentativas restantes: " + (3 - tentativas));
+                Console.WriteLine();
+            }
+
+            if (!login)
+            {
+                Console.WriteLine("=================================");
+                Console.WriteLine("CONTA BLOQUEADA!");
+                Console.WriteLine("Muitas tentativas inválidas.");
+                Console.WriteLine("Sistema encerrado.");
+                Console.WriteLine("=================================");
+
+                Console.ReadLine();
+                return;
+            }
+
+            Console.WriteLine();
+            Console.WriteLine("Login realizado com sucesso!");
+            Console.WriteLine("Bem-vindo à Elite Sports, " + usuario.Nome + "!");
+            Console.WriteLine();
+
+            Carrinho carrinho = new Carrinho();
+
+            int opcao = 0;
+
+            while (opcao != 5)
+            {
+                Console.WriteLine("========== MENU ==========");
+                Console.WriteLine("1 - Ver produtos");
+                Console.WriteLine("2 - Adicionar produto ao carrinho");
+                Console.WriteLine("3 - Ver carrinho");
+                Console.WriteLine("4 - Finalizar compra");
+                Console.WriteLine("5 - Sair");
+                Console.WriteLine("==========================");
+
+                Console.Write("Escolha uma opção: ");
+
+                opcao = Convert.ToInt32(Console.ReadLine());
+
+                Console.WriteLine();
+
+                switch (opcao)
+                {
+                    // =====================================================
+                    // VER PRODUTOS
+                    // =====================================================
+
+                    case 1:
+
+                        Console.WriteLine("========== PRODUTOS ==========");
+                        Console.WriteLine();
+
+                        Console.WriteLine("====== CAMISAS DA COPA ======");
+                        Console.WriteLine("Camisa Brasil - R$129,90");
+                        Console.WriteLine("Camisa França - R$129,90");
+                        Console.WriteLine("Camisa Argentina - R$129,90");
+                        Console.WriteLine("Camisa Portugal - R$129,90");
+                        Console.WriteLine("Camisa Alemanha - R$129,90");
+                        Console.WriteLine("Camisa Espanha - R$129,90");
+                        Console.WriteLine("Camisa Inglaterra - R$129,90");
+                        Console.WriteLine("Camisa Bélgica - R$129,90");
+                        Console.WriteLine();
+
+                        Console.WriteLine("======= SHORTS DA COPA =======");
+                        Console.WriteLine("Short Brasil - R$89,90");
+                        Console.WriteLine("Short França - R$89,90");
+                        Console.WriteLine("Short Argentina - R$89,90");
+                        Console.WriteLine("Short Portugal - R$89,90");
+                        Console.WriteLine("Short Alemanha - R$89,90");
+                        Console.WriteLine("Short Espanha - R$89,90");
+                        Console.WriteLine("Short Inglaterra - R$89,90");
+                        Console.WriteLine("Short Bélgica - R$89,90");
+                        Console.WriteLine();
+
+                        Console.WriteLine("======= ROUPAS DE TREINO =======");
+                        Console.WriteLine("Camiseta Dry Fit - R$99,90");
+                        Console.WriteLine("Short Esportivo - R$79,90");
+                        Console.WriteLine("Camiseta Treino - R$89,90");
+                        Console.WriteLine("Regata Fitness - R$69,90");
+                        Console.WriteLine();
+
+                        break;
+
+                    // =====================================================
+                    // ADICIONAR PRODUTO
+                    // =====================================================
+
+                    case 2:
+
+                        Console.WriteLine("========== CATEGORIAS ==========");
+                        Console.WriteLine("1 - Copa do Mundo");
+                        Console.WriteLine("2 - Roupas de Treino");
+                        Console.WriteLine("0 - Voltar");
+                        Console.WriteLine("================================");
+
+                        Console.Write("Escolha uma categoria: ");
+                        int categoriaEscolhida = Convert.ToInt32(Console.ReadLine());
+
+                        if (categoriaEscolhida == 0)
+                        {
+                            break;
+                        }
+
+                        Console.WriteLine();
+
+                        // =====================================================
+                        // COPA DO MUNDO
+                        // =====================================================
+
+                        if (categoriaEscolhida == 1)
+                        {
+                            Console.WriteLine("========== COPA DO MUNDO ==========");
+                            Console.WriteLine("1 - Camisas");
+                            Console.WriteLine("2 - Shorts");
+                            Console.WriteLine("0 - Voltar");
+                            Console.WriteLine("===================================");
+
+                            Console.Write("Escolha uma opção: ");
+                            int opcaoCopa = Convert.ToInt32(Console.ReadLine());
+
+                            if (opcaoCopa == 0)
+                            {
+                                break;
+                            }
+
+                            Console.WriteLine();
+
+                            // =====================================================
+                            // CAMISAS
+                            // =====================================================
+
+                            if (opcaoCopa == 1)
+                            {
+                                Console.WriteLine("========== CAMISAS DA COPA ==========");
+                                Console.WriteLine("1 - Brasil - R$129,90");
+                                Console.WriteLine("2 - França - R$129,90");
+                                Console.WriteLine("3 - Argentina - R$129,90");
+                                Console.WriteLine("4 - Portugal - R$129,90");
+                                Console.WriteLine("5 - Alemanha - R$129,90");
+                                Console.WriteLine("6 - Espanha - R$129,90");
+                                Console.WriteLine("7 - Inglaterra - R$129,90");
+                                Console.WriteLine("8 - Bélgica - R$129,90");
+                                Console.WriteLine("0 - Voltar");
+                                Console.WriteLine("=====================================");
+
+                                Console.Write("Escolha uma seleção: ");
+                                int camisaEscolhida = Convert.ToInt32(Console.ReadLine());
+
+                                if (camisaEscolhida == 0)
+                                {
+                                    break;
+                                }
+
+                                Console.Write("Quantidade: ");
+                                int quantidade = Convert.ToInt32(Console.ReadLine());
+
+                                string nomeCamisa = "";
+
+                                if (camisaEscolhida == 1)
+                                    nomeCamisa = "Camisa Brasil";
+                                else if (camisaEscolhida == 2)
+                                    nomeCamisa = "Camisa França";
+                                else if (camisaEscolhida == 3)
+                                    nomeCamisa = "Camisa Argentina";
+                                else if (camisaEscolhida == 4)
+                                    nomeCamisa = "Camisa Portugal";
+                                else if (camisaEscolhida == 5)
+                                    nomeCamisa = "Camisa Alemanha";
+                                else if (camisaEscolhida == 6)
+                                    nomeCamisa = "Camisa Espanha";
+                                else if (camisaEscolhida == 7)
+                                    nomeCamisa = "Camisa Inglaterra";
+                                else if (camisaEscolhida == 8)
+                                    nomeCamisa = "Camisa Bélgica";
+                                else
+                                {
+                                    Console.WriteLine("Seleção inválida!");
+                                    break;
+                                }
+
+                                Produto camisa = new Produto()
+                                {
+                                    Nome = nomeCamisa,
+                                    Categoria = "Copa do Mundo",
+                                    Cor = "Oficial",
+                                    Tamanho = "M",
+                                    Preco = 129.90m,
+                                    Estoque = 20
+                                };
+
+                                carrinho.AdicionarProduto(camisa, quantidade);
+                            }
+
+                            // =====================================================
+                            // SHORTS
+                            // =====================================================
+
+                            else if (opcaoCopa == 2)
+                            {
+                                Console.WriteLine("========== SHORTS DA COPA ==========");
+                                Console.WriteLine("1 - Short Brasil - R$89,90");
+                                Console.WriteLine("2 - Short França - R$89,90");
+                                Console.WriteLine("3 - Short Argentina - R$89,90");
+                                Console.WriteLine("4 - Short Portugal - R$89,90");
+                                Console.WriteLine("5 - Short Alemanha - R$89,90");
+                                Console.WriteLine("6 - Short Espanha - R$89,90");
+                                Console.WriteLine("7 - Short Inglaterra - R$89,90");
+                                Console.WriteLine("8 - Short Bélgica - R$89,90");
+                                Console.WriteLine("0 - Voltar");
+                                Console.WriteLine("====================================");
+
+                                Console.Write("Escolha um short: ");
+                                int shortEscolhido = Convert.ToInt32(Console.ReadLine());
+
+                                if (shortEscolhido == 0)
+                                {
+                                    break;
+                                }
+
+                                Console.Write("Quantidade: ");
+                                int quantidade = Convert.ToInt32(Console.ReadLine());
+
+                                string nomeShort = "";
+
+                                if (shortEscolhido == 1)
+                                    nomeShort = "Short Brasil";
+                                else if (shortEscolhido == 2)
+                                    nomeShort = "Short França";
+                                else if (shortEscolhido == 3)
+                                    nomeShort = "Short Argentina";
+                                else if (shortEscolhido == 4)
+                                    nomeShort = "Short Portugal";
+                                else if (shortEscolhido == 5)
+                                    nomeShort = "Short Alemanha";
+                                else if (shortEscolhido == 6)
+                                    nomeShort = "Short Espanha";
+                                else if (shortEscolhido == 7)
+                                    nomeShort = "Short Inglaterra";
+                                else if (shortEscolhido == 8)
+                                    nomeShort = "Short Bélgica";
+                                else
+                                {
+                                    Console.WriteLine("Short inválido!");
+                                    break;
+                                }
+
+                                Produto shortProduto = new Produto()
+                                {
+                                    Nome = nomeShort,
+                                    Categoria = "Copa do Mundo",
+                                    Cor = "Oficial",
+                                    Tamanho = "M",
+                                    Preco = 89.90m,
+                                    Estoque = 15
+                                };
+
+                                carrinho.AdicionarProduto(shortProduto, quantidade);
+                            }
+                        }
+
+                        // =====================================================
+                        // TREINO
+                        // =====================================================
+
+                        else if (categoriaEscolhida == 2)
+                        {
+                            Console.WriteLine("========== TREINO ==========");
+                            Console.WriteLine("1 - Camiseta Dry Fit - R$99,90");
+                            Console.WriteLine("2 - Short Esportivo - R$79,90");
+                            Console.WriteLine("3 - Camiseta Treino - R$89,90");
+                            Console.WriteLine("4 - Regata Fitness - R$69,90");
+                            Console.WriteLine("0 - Voltar");
+                            Console.WriteLine("============================");
+
+                            Console.Write("Escolha um produto: ");
+                            int produtoTreino = Convert.ToInt32(Console.ReadLine());
+
+                            if (produtoTreino == 0)
+                            {
+                                break;
+                            }
+
+                            Console.Write("Quantidade: ");
+                            int quantidade = Convert.ToInt32(Console.ReadLine());
+
+                            Produto produtoTreinoSelecionado = null;
+
+                            if (produtoTreino == 1)
+                            {
+                                produtoTreinoSelecionado = new Produto()
+                                {
+                                    Nome = "Camiseta Dry Fit",
+                                    Categoria = "Treino",
+                                    Cor = "Preta",
+                                    Tamanho = "M",
+                                    Preco = 99.90m,
+                                    Estoque = 20
+                                };
+                            }
+                            else if (produtoTreino == 2)
+                            {
+                                produtoTreinoSelecionado = new Produto()
+                                {
+                                    Nome = "Short Esportivo",
+                                    Categoria = "Treino",
+                                    Cor = "Preto",
+                                    Tamanho = "M",
+                                    Preco = 79.90m,
+                                    Estoque = 15
+                                };
+                            }
+                            else if (produtoTreino == 3)
+                            {
+                                produtoTreinoSelecionado = new Produto()
+                                {
+                                    Nome = "Camiseta Treino",
+                                    Categoria = "Treino",
+                                    Cor = "Cinza",
+                                    Tamanho = "M",
+                                    Preco = 89.90m,
+                                    Estoque = 18
+                                };
+                            }
+                            else if (produtoTreino == 4)
+                            {
+                                produtoTreinoSelecionado = new Produto()
+                                {
+                                    Nome = "Regata Fitness",
+                                    Categoria = "Treino",
+                                    Cor = "Preta",
+                                    Tamanho = "M",
+                                    Preco = 69.90m,
+                                    Estoque = 25
+                                };
+                            }
+
+                            if (produtoTreinoSelecionado != null)
+                            {
+                                carrinho.AdicionarProduto(produtoTreinoSelecionado, quantidade);
+                            }
+                        }
+
+                        break;
+
+                    // =====================================================
+                    // VER CARRINHO
+                    // =====================================================
+
+                    case 3:
+
+                        carrinho.ExibirCarrinho();
+
+                        break;
+
+                    // =====================================================
+                    // FINALIZAR COMPRA
+                    // =====================================================
+
+                    case 4:
+
+                        decimal total = carrinho.CalcularTotal();
+
+                        Console.WriteLine("TOTAL DA COMPRA: R$" + total);
+                        Console.WriteLine();
+
+                        Console.WriteLine("Forma de pagamento disponível:");
+                        Console.WriteLine("PIX");
+                        Console.WriteLine();
+
+                        Pagamento pagamento = new Pagamento();
+
+                        pagamento.MetodoPagamento = "PIX";
+
+                        pagamento.RealizarPagamento();
+
+                        Pedido pedido = new Pedido();
+
+                        pedido.Cliente = usuario;
+                        pedido.TotalPedido = total;
+                        pedido.Status = "Pagamento aprovado";
+
+                        pedido.FinalizarPedido();
+
+                        break;
+
+                    // =====================================================
+                    // SAIR
+                    // =====================================================
+
+                    case 5:
+
+                        Console.WriteLine("Sistema encerrado.");
+                        break;
+
+                    default:
+
+                        Console.WriteLine("Opção inválida!");
+                        break;
+                }
+            }
+
+            Console.ReadLine();
+        }
+    }
+}
