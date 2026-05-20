@@ -1,343 +1,593 @@
-using System; 
+using System;
 using System.Collections.Generic;
 using System.Text;
-namespace EliteSports 
-{     
-    // =====================================================     
-    // CLASSE BASE PRODUTO     
-    // =====================================================     
-    public class Produto     
-    {         public string Nome { get; set; }          
-    public string Categoria { get; set; }          
-    public string Cor { get; set; }          
-    public string Tamanho { get; set; }          
-    public decimal Preco { get; set; }          
-    public int Estoque { get; set; }          
-    // MÉTODO VIRTUAL         
-    public virtual void ExibirDetalhes()         
-    {             
-        Console.WriteLine("=================================");         
-        Console.WriteLine("Produto: " + Nome);             
-        Console.WriteLine("Categoria: " + Categoria);             
-        Console.WriteLine("Cor: " + Cor);             
-        Console.WriteLine("Tamanho: " + Tamanho);             
-        Console.WriteLine("Preço: R$" + Preco);             
-        Console.WriteLine("Estoque: " + Estoque);             
-        Console.WriteLine("=================================");
-        Console.WriteLine();
-    }     
-}     
-// =====================================================     
-// CLASSE CAMISA     
-// HERANÇA DA CLASSE PRODUTO     
-// =====================================================     
-public class Camisa : Produto     
-{         
-    public string Time { get; set; }          
-    // POLIMORFISMO         
-    public override void ExibirDetalhes()         
-    {             
-        Console.WriteLine("========== CAMISA ==========");              
-        Console.WriteLine("Produto: " + Nome);              
-        if (!string.IsNullOrEmpty(Time))             
-        {                 
-            Console.WriteLine("Seleção/Time: " + Time);             
-        }              
-        Console.WriteLine("Categoria: " + Categoria);             
-        Console.WriteLine("Cor: " + Cor);             
-        Console.WriteLine("Tamanho: " + Tamanho);             
-        Console.WriteLine("Preço: R$" + Preco);             
-        Console.WriteLine("Estoque: " + Estoque);              
-        Console.WriteLine("===========================");              
-        Console.WriteLine();         
-    }     
-}      
-// =====================================================     
-// CLASSE REGATA     
-// =====================================================    
-public class Regata : Produto     
-{         
-    public override void ExibirDetalhes()         
-    {             
-        Console.WriteLine("========== REGATA ==========");              
-        Console.WriteLine("Produto: " + Nome);             
-        Console.WriteLine("Categoria: " + Categoria);             
-        Console.WriteLine("Cor: " + Cor);             
-        Console.WriteLine("Tamanho: " + Tamanho);             
-        Console.WriteLine("Preço: R$" + Preco);             
-        Console.WriteLine("Estoque: " + Estoque);              
-        Console.WriteLine("============================");              
-        Console.WriteLine();         
-    }     
-}      
-// =====================================================     
-// CLASSE SHORT     
-// =====================================================     
-public class ShortEsportivo : Produto     
-{         
-    public override void ExibirDetalhes()         
-    {             
-        Console.WriteLine("========== SHORT ==========");              
-        Console.WriteLine("Produto: " + Nome);             
-        Console.WriteLine("Categoria: " + Categoria);             
-        Console.WriteLine("Cor: " + Cor);             
-        Console.WriteLine("Tamanho: " + Tamanho);             
-        Console.WriteLine("Preço: R$" + Preco);             
-        Console.WriteLine("Estoque: " + Estoque);              
-        Console.WriteLine("===========================");              
-        Console.WriteLine();         
-    }    
-}      
-// =====================================================     
-// CLASSE USUÁRIO     
-// =====================================================     
-public class Usuario     
-{         
-    public string Nome { get; set; }          
-    public string Email { get; set; }          
-    public string Senha { get; set; }          
-    // LOGIN         
-    public bool FazerLogin(string email, string senha)         
-    {             
-        return Email == email && Senha == senha;         
-    }     
-}      
-// =====================================================     
-// ITEM DO CARRINHO    
-// =====================================================     
-public class ItemCarrinho     
-{         
-    public Produto Produto { get; set; }          
-    public int Quantidade { get; set; }          
-    // CALCULAR SUBTOTAL         
-    public decimal CalcularSubtotal()         
-    {             
-        return Produto.Preco * Quantidade;         
-    }     
-}      
-// =====================================================
-// CLASSE CARRINHO
-// =====================================================
-public class Carrinho
+
+namespace EliteSports
 {
-    public List<ItemCarrinho> Itens = new List<ItemCarrinho>();
-    // ADICIONAR PRODUTO
-    public void AdicionarProduto(Produto produto, int quantidade)
-    {
-        // VALIDAR ESTOQUE
-        if (quantidade > produto.Estoque)
-        {
-            Console.WriteLine("Estoque insuficiente para o produto: " + produto.Nome);
-            Console.WriteLine("Estoque disponível: " + produto.Estoque);
-            Console.WriteLine();
-            return;
-        }
-        ItemCarrinho item = new ItemCarrinho();
-        item.Produto = produto;
-        item.Quantidade = quantidade;
-        Itens.Add(item);
-        // DIMINUIR ESTOQUE
-        produto.Estoque -= quantidade;
-        Console.WriteLine(produto.Nome + " foi adicionado ao carrinho!");
-        Console.WriteLine("Quantidade: " + quantidade);
-        Console.WriteLine("Estoque restante: " + produto.Estoque);
-        Console.WriteLine();
-    }
-    // CALCULAR TOTAL
-    public decimal CalcularTotal()
-    {
-        decimal total = 0;
+    // =====================================================
+    // CLASSE PRODUTO
+    // =====================================================
 
-        foreach (var item in Itens)
+    public class Produto
+    {
+        public string Nome { get; set; }
+        public string Categoria { get; set; }
+        public string Cor { get; set; }
+        public string Tamanho { get; set; }
+        public decimal Preco { get; set; }
+        public int Estoque { get; set; }
+
+        public virtual void ExibirDetalhes()
         {
-            total += item.CalcularSubtotal();
+            Console.WriteLine("=================================");
+            Console.WriteLine("Produto: " + Nome);
+            Console.WriteLine("Categoria: " + Categoria);
+            Console.WriteLine("Cor: " + Cor);
+            Console.WriteLine("Tamanho: " + Tamanho);
+            Console.WriteLine("Preço: R$" + Preco);
+            Console.WriteLine("Estoque: " + Estoque);
+            Console.WriteLine("=================================");
+            Console.WriteLine();
+        }
+    }
+
+    // =====================================================
+    // CLASSE CAMISA
+    // =====================================================
+
+    public class Camisa : Produto
+    {
+        public string Time { get; set; }
+
+        public override void ExibirDetalhes()
+        {
+            Console.WriteLine("========== CAMISA ==========");
+            Console.WriteLine("Produto: " + Nome);
+
+            if (!string.IsNullOrEmpty(Time))
+            {
+                Console.WriteLine("Seleção: " + Time);
+            }
+
+            Console.WriteLine("Categoria: " + Categoria);
+            Console.WriteLine("Cor: " + Cor);
+            Console.WriteLine("Tamanho: " + Tamanho);
+            Console.WriteLine("Preço: R$" + Preco);
+            Console.WriteLine("Estoque: " + Estoque);
+            Console.WriteLine("============================");
+            Console.WriteLine();
+        }
+    }
+
+    // =====================================================
+    // CLASSE SHORT
+    // =====================================================
+
+    public class ShortEsportivo : Produto
+    {
+        public override void ExibirDetalhes()
+        {
+            Console.WriteLine("=========== SHORT ===========");
+            Console.WriteLine("Produto: " + Nome);
+            Console.WriteLine("Categoria: " + Categoria);
+            Console.WriteLine("Cor: " + Cor);
+            Console.WriteLine("Tamanho: " + Tamanho);
+            Console.WriteLine("Preço: R$" + Preco);
+            Console.WriteLine("Estoque: " + Estoque);
+            Console.WriteLine("=============================");
+            Console.WriteLine();
+        }
+    }
+
+    // =====================================================
+    // CLASSE REGATA
+    // =====================================================
+
+    public class Regata : Produto
+    {
+        public override void ExibirDetalhes()
+        {
+            Console.WriteLine("========== REGATA ==========");
+            Console.WriteLine("Produto: " + Nome);
+            Console.WriteLine("Categoria: " + Categoria);
+            Console.WriteLine("Cor: " + Cor);
+            Console.WriteLine("Tamanho: " + Tamanho);
+            Console.WriteLine("Preço: R$" + Preco);
+            Console.WriteLine("Estoque: " + Estoque);
+            Console.WriteLine("============================");
+            Console.WriteLine();
+        }
+    }
+
+    // =====================================================
+    // CLASSE USUARIO
+    // =====================================================
+
+    public class Usuario
+    {
+        public string Nome { get; set; }
+        public string Email { get; set; }
+        public string Senha { get; set; }
+
+        public bool FazerLogin(string email, string senha)
+        {
+            return Email == email && Senha == senha;
+        }
+    }
+
+    // =====================================================
+    // ITEM CARRINHO
+    // =====================================================
+
+    public class ItemCarrinho
+    {
+        public Produto Produto { get; set; }
+        public int Quantidade { get; set; }
+
+        public decimal CalcularSubtotal()
+        {
+            return Produto.Preco * Quantidade;
+        }
+    }
+
+    // =====================================================
+    // CARRINHO
+    // =====================================================
+
+    public class Carrinho
+    {
+        public List<ItemCarrinho> Itens = new List<ItemCarrinho>();
+
+        public void AdicionarProduto(Produto produto, int quantidade)
+        {
+            if (quantidade > produto.Estoque)
+            {
+                Console.WriteLine("Estoque insuficiente!");
+                Console.WriteLine();
+                return;
+            }
+
+            ItemCarrinho item = new ItemCarrinho();
+
+            item.Produto = produto;
+            item.Quantidade = quantidade;
+
+            Itens.Add(item);
+
+            produto.Estoque -= quantidade;
+
+            Console.WriteLine(produto.Nome + " adicionado ao carrinho!");
+            Console.WriteLine();
         }
 
-        return total;
-    }
-    // LISTAR CARRINHO
-    public void ListarCarrinho()
-    {
-        Console.WriteLine("========== CARRINHO ==========");
-        decimal total = 0;
-        foreach (var item in Itens)
+        public decimal CalcularTotal()
         {
-            decimal subtotal = item.CalcularSubtotal();
-            Console.WriteLine("Produto: " + item.Produto.Nome);
-            Console.WriteLine("Quantidade: " + item.Quantidade);
-            Console.WriteLine("Subtotal: R$" + subtotal);
-            Console.WriteLine();
-            total += subtotal;
+            decimal total = 0;
+
+            foreach (var item in Itens)
+            {
+                total += item.CalcularSubtotal();
+            }
+
+            return total;
         }
-        Console.WriteLine("VALOR TOTAL: R$" + total);
-        Console.WriteLine("==============================");
-        Console.WriteLine();
+
+        public void ListarCarrinho()
+        {
+            Console.WriteLine("========== CARRINHO ==========");
+
+            decimal total = 0;
+
+            foreach (var item in Itens)
+            {
+                decimal subtotal = item.CalcularSubtotal();
+
+                Console.WriteLine("Produto: " + item.Produto.Nome);
+                Console.WriteLine("Quantidade: " + item.Quantidade);
+                Console.WriteLine("Subtotal: R$" + subtotal);
+                Console.WriteLine();
+
+                total += subtotal;
+            }
+
+            Console.WriteLine("TOTAL: R$" + total);
+            Console.WriteLine("==============================");
+            Console.WriteLine();
+        }
     }
-}    
-// =====================================================     
-// CLASSE PEDIDO     
-// =====================================================     
-public class Pedido     
-{         
-    public Usuario Cliente { get; set; }          
-    public List<ItemCarrinho> ItensPedido { get; set; }          
-    public DateTime DataPedido { get; set; }          
-    public string Status { get; set; }          
-    public decimal TotalPedido { get; set; }          
-    // FINALIZAR PEDIDO         
-    public void FinalizarPedido()         
-    {             
-        Console.WriteLine("==================================");             
-        Console.WriteLine("PEDIDO FINALIZADO COM SUCESSO!");             
-        Console.WriteLine("Cliente: " + Cliente.Nome);             
-        Console.WriteLine("Data: " + DataPedido);             
-        Console.WriteLine("Status: " + Status);             
-        Console.WriteLine("Valor Total: R$" + TotalPedido);             
-        Console.WriteLine("==================================");              
-        Console.WriteLine();         
-    }     
-}      
-// =====================================================    
-// CLASSE PAGAMENTO     
-// =====================================================     
-public class Pagamento     
-{         
-    public string MetodoPagamento { get; set; }          
-    public void RealizarPagamento()         
-    {             
-        Console.WriteLine("Pagamento realizado com sucesso!");             
-        Console.WriteLine("Método: " + MetodoPagamento);              
-        Console.WriteLine();         
-    }     
-}      
-// =====================================================     
-// CLASSE ADMINISTRADOR    
-// =====================================================     
-public class Admin     
-{         
-    public string NomeAdmin { get; set; }          
-    // CADASTRAR PRODUTO         
-    public void CadastrarProduto(Produto produto)         
-    {             
-        Console.WriteLine("Produto cadastrado com sucesso!");             
-        Console.WriteLine("Produto: " + produto.Nome);              
-        Console.WriteLine();         
-        
-    }          
-    // ATUALIZAR ESTOQUE         
-    public void AtualizarEstoque(Produto produto, int novoEstoque)         
-    {             
-        produto.Estoque = novoEstoque;              
-        Console.WriteLine("Estoque atualizado!");             
-        Console.WriteLine("Produto: " + produto.Nome);             
-        Console.WriteLine("Novo estoque: " + produto.Estoque);              
-        Console.WriteLine();         
-    }     
-}      
-// =====================================================     
-// PROGRAMA PRINCIPAL     
-// =====================================================     
-class Program     
-{         
-    static void Main(string[] args)         
-    {             
-        Console.OutputEncoding = System.Text.Encoding.UTF8;
-        Console.WriteLine("======================================");    
-        Console.WriteLine("           ELITE SPORTS");             
-        Console.WriteLine(" Loja Oficial Esportiva - Copa 2026");             
-        Console.WriteLine("======================================");    
-        Console.WriteLine();              
-        // =====================================================             
-        // LOGIN             
-        // =====================================================             
-        Usuario usuario = new Usuario();              
-        usuario.Nome = "Cauã";             
-        usuario.Email = "elite@2026.com";             
-        usuario.Senha = "123456";              
-        bool login = usuario.FazerLogin("elite@2026.com", "123456");        
-        if (login)             
-        {                 
-            Console.WriteLine("Login realizado com sucesso!");             
-        }             
-        else            
-        {                 
-            Console.WriteLine("Email ou senha incorretos!");        
-        }              
-        Console.WriteLine();              
-        // =====================================================             
-        // CAMISA             
-        // =====================================================             
-        Camisa camisaBrasil = new Camisa();              
-        camisaBrasil.Nome = "Camisa Brasil 2026";             
-        camisaBrasil.Categoria = "Futebol";             
-        camisaBrasil.Time = "Brasil";             
-        camisaBrasil.Cor = "Amarela";             
-        camisaBrasil.Tamanho = "M";             
-        camisaBrasil.Preco = 349.90m;             
-        camisaBrasil.Estoque = 20;              
-        // =====================================================             
-        // REGATA FITNESS            
-        // =====================================================             
-        Regata regataFitness = new Regata();              
-        regataFitness.Nome = "Regata Dry Fit Elite";             
-        regataFitness.Categoria = "Fitness";             
-        regataFitness.Cor = "Preta";             
-        regataFitness.Tamanho = "G";             
-        regataFitness.Preco = 179.90m;             
-        regataFitness.Estoque = 30;              
-        // =====================================================             
-        // SHORT ESPORTIVO             
-        // =====================================================             
-        ShortEsportivo shortAcademia = new ShortEsportivo();            
-        shortAcademia.Nome = "Short Academia Pro";    
-        shortAcademia.Categoria = "Fitness";            
-        shortAcademia.Cor = "Azul";             
-        shortAcademia.Tamanho = "M";             
-        shortAcademia.Preco = 149.90m;             
-        shortAcademia.Estoque = 15;              
-        // =====================================================             
-        // EXIBIR PRODUTOS             
-        // =====================================================             
-        camisaBrasil.ExibirDetalhes();              
-        regataFitness.ExibirDetalhes();              
-        shortAcademia.ExibirDetalhes();              
-        // =====================================================             
-        // ADMINISTRADOR             
-        // =====================================================             
-        Admin admin = new Admin();              
-        admin.NomeAdmin = "Administrador Elite Sports";              
-        admin.CadastrarProduto(camisaBrasil);             
-        admin.CadastrarProduto(regataFitness);             
-        admin.CadastrarProduto(shortAcademia);              
-        // =====================================================             
-        // ATUALIZAR ESTOQUE             
-        // =====================================================             
-        admin.AtualizarEstoque(shortAcademia, 12);             
-        // =====================================================             
-        // CARRINHO             
-        // =====================================================             
-        Carrinho carrinho = new Carrinho();              
-        carrinho.AdicionarProduto(camisaBrasil, 1);             
-        carrinho.AdicionarProduto(shortAcademia, 2);              
-        carrinho.ListarCarrinho();             
-        // =====================================================             
-        // PAGAMENTO             
-        // =====================================================             
-        Pagamento pagamento = new Pagamento();              
-        pagamento.MetodoPagamento = "PIX";              
-        pagamento.RealizarPagamento();              
-        // =====================================================             
-        // PEDIDO             
-        // =====================================================             
-        Pedido pedido = new Pedido();              
-        pedido.Cliente = usuario;             
-        pedido.ItensPedido = carrinho.Itens;             
-        pedido.DataPedido = DateTime.Now;             
-        pedido.Status = "Pagamento aprovado";             
-        pedido.TotalPedido = carrinho.CalcularTotal();            
-        pedido.FinalizarPedido();              
-        Console.WriteLine("Sistema encerrado.");
-        Console.ReadLine();
+
+    // =====================================================
+    // PAGAMENTO
+    // =====================================================
+
+    public class Pagamento
+    {
+        public string MetodoPagamento { get; set; }
+
+        public void RealizarPagamento()
+        {
+            Console.WriteLine("Pagamento realizado com sucesso!");
+            Console.WriteLine("Método: " + MetodoPagamento);
+            Console.WriteLine();
+        }
+    }
+
+    // =====================================================
+    // PEDIDO
+    // =====================================================
+
+    public class Pedido
+    {
+        public Usuario Cliente { get; set; }
+        public List<ItemCarrinho> ItensPedido { get; set; }
+        public DateTime DataPedido { get; set; }
+        public string Status { get; set; }
+        public decimal TotalPedido { get; set; }
+
+        public void FinalizarPedido()
+        {
+            Console.WriteLine("==================================");
+            Console.WriteLine("PEDIDO FINALIZADO COM SUCESSO!");
+            Console.WriteLine("Cliente: " + Cliente.Nome);
+            Console.WriteLine("Data: " + DataPedido);
+            Console.WriteLine("Status: " + Status);
+            Console.WriteLine("Valor Total: R$" + TotalPedido);
+            Console.WriteLine("==================================");
+            Console.WriteLine();
+        }
+    }
+
+    // =====================================================
+    // ADMIN
+    // =====================================================
+
+    public class Admin
+    {
+        public string NomeAdmin { get; set; }
+
+        public void CadastrarProduto(Produto produto)
+        {
+            Console.WriteLine("Produto cadastrado: " + produto.Nome);
+        }
+    }
+
+    // =====================================================
+    // PROGRAMA PRINCIPAL
+    // =====================================================
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.OutputEncoding = Encoding.UTF8;
+
+            Console.WriteLine("======================================");
+            Console.WriteLine("           ELITE SPORTS");
+            Console.WriteLine(" Loja Oficial Esportiva - Copa 2026");
+            Console.WriteLine("======================================");
+            Console.WriteLine();
+
+            // =====================================================
+            // LOGIN
+            // =====================================================
+
+            Usuario usuario = new Usuario();
+
+            usuario.Nome = "Cauã";
+            usuario.Email = "elite@2026.com";
+            usuario.Senha = "123456";
+
+            bool login = usuario.FazerLogin("elite@2026.com", "123456");
+
+            if (login)
+            {
+                Console.WriteLine("Login realizado com sucesso!");
+                Console.WriteLine();
+            }
+
+            // =====================================================
+            // CAMISAS DA COPA
+            // =====================================================
+
+            Camisa camisaBrasil = new Camisa()
+            {
+                Nome = "Camisa Brasil",
+                Categoria = "Copa do Mundo",
+                Time = "Brasil",
+                Cor = "Amarela",
+                Tamanho = "M",
+                Preco = 129.90m,
+                Estoque = 20
+            };
+
+            Camisa camisaFranca = new Camisa()
+            {
+                Nome = "Camisa França",
+                Categoria = "Copa do Mundo",
+                Time = "França",
+                Cor = "Azul",
+                Tamanho = "M",
+                Preco = 129.90m,
+                Estoque = 20
+            };
+
+            Camisa camisaArgentina = new Camisa()
+            {
+                Nome = "Camisa Argentina",
+                Categoria = "Copa do Mundo",
+                Time = "Argentina",
+                Cor = "Azul e Branco",
+                Tamanho = "M",
+                Preco = 129.90m,
+                Estoque = 20
+            };
+
+            Camisa camisaPortugal = new Camisa()
+            {
+                Nome = "Camisa Portugal",
+                Categoria = "Copa do Mundo",
+                Time = "Portugal",
+                Cor = "Vermelha",
+                Tamanho = "M",
+                Preco = 129.90m,
+                Estoque = 20
+            };
+
+            Camisa camisaAlemanha = new Camisa()
+            {
+                Nome = "Camisa Alemanha",
+                Categoria = "Copa do Mundo",
+                Time = "Alemanha",
+                Cor = "Branca",
+                Tamanho = "M",
+                Preco = 129.90m,
+                Estoque = 20
+            };
+
+            Camisa camisaEspanha = new Camisa()
+            {
+                Nome = "Camisa Espanha",
+                Categoria = "Copa do Mundo",
+                Time = "Espanha",
+                Cor = "Vermelha",
+                Tamanho = "M",
+                Preco = 129.90m,
+                Estoque = 20
+            };
+
+            Camisa camisaInglaterra = new Camisa()
+            {
+                Nome = "Camisa Inglaterra",
+                Categoria = "Copa do Mundo",
+                Time = "Inglaterra",
+                Cor = "Branca",
+                Tamanho = "M",
+                Preco = 129.90m,
+                Estoque = 20
+            };
+
+            Camisa camisaBelgica = new Camisa()
+            {
+                Nome = "Camisa Bélgica",
+                Categoria = "Copa do Mundo",
+                Time = "Bélgica",
+                Cor = "Vermelha",
+                Tamanho = "M",
+                Preco = 129.90m,
+                Estoque = 20
+            };
+
+            // =====================================================
+            // SHORTS DA COPA
+            // =====================================================
+
+            ShortEsportivo shortBrasil = new ShortEsportivo()
+            {
+                Nome = "Short Brasil",
+                Categoria = "Copa do Mundo",
+                Cor = "Azul",
+                Tamanho = "M",
+                Preco = 89.90m,
+                Estoque = 15
+            };
+
+            ShortEsportivo shortFranca = new ShortEsportivo()
+            {
+                Nome = "Short França",
+                Categoria = "Copa do Mundo",
+                Cor = "Azul",
+                Tamanho = "M",
+                Preco = 89.90m,
+                Estoque = 15
+            };
+
+            ShortEsportivo shortArgentina = new ShortEsportivo()
+            {
+                Nome = "Short Argentina",
+                Categoria = "Copa do Mundo",
+                Cor = "Preto",
+                Tamanho = "M",
+                Preco = 89.90m,
+                Estoque = 15
+            };
+
+            ShortEsportivo shortPortugal = new ShortEsportivo()
+            {
+                Nome = "Short Portugal",
+                Categoria = "Copa do Mundo",
+                Cor = "Verde",
+                Tamanho = "M",
+                Preco = 89.90m,
+                Estoque = 15
+            };
+
+            ShortEsportivo shortAlemanha = new ShortEsportivo()
+            {
+                Nome = "Short Alemanha",
+                Categoria = "Copa do Mundo",
+                Cor = "Preto",
+                Tamanho = "M",
+                Preco = 89.90m,
+                Estoque = 15
+            };
+
+            ShortEsportivo shortEspanha = new ShortEsportivo()
+            {
+                Nome = "Short Espanha",
+                Categoria = "Copa do Mundo",
+                Cor = "Azul",
+                Tamanho = "M",
+                Preco = 89.90m,
+                Estoque = 15
+            };
+
+            ShortEsportivo shortInglaterra = new ShortEsportivo()
+            {
+                Nome = "Short Inglaterra",
+                Categoria = "Copa do Mundo",
+                Cor = "Branco",
+                Tamanho = "M",
+                Preco = 89.90m,
+                Estoque = 15
+            };
+
+            ShortEsportivo shortBelgica = new ShortEsportivo()
+            {
+                Nome = "Short Bélgica",
+                Categoria = "Copa do Mundo",
+                Cor = "Preto",
+                Tamanho = "M",
+                Preco = 89.90m,
+                Estoque = 15
+            };
+
+            // =====================================================
+            // ROUPAS DE TREINO
+            // =====================================================
+
+            Produto dryFit = new Produto()
+            {
+                Nome = "Camiseta Dry Fit",
+                Categoria = "Treino",
+                Cor = "Preta",
+                Tamanho = "M",
+                Preco = 99.90m,
+                Estoque = 25
+            };
+
+            Produto camisetaTreino = new Produto()
+            {
+                Nome = "Camiseta Treino",
+                Categoria = "Treino",
+                Cor = "Cinza",
+                Tamanho = "M",
+                Preco = 89.90m,
+                Estoque = 25
+            };
+
+            ShortEsportivo shortTreino = new ShortEsportivo()
+            {
+                Nome = "Short Esportivo",
+                Categoria = "Treino",
+                Cor = "Preto",
+                Tamanho = "M",
+                Preco = 79.90m,
+                Estoque = 25
+            };
+
+            Regata regataFitness = new Regata()
+            {
+                Nome = "Regata Fitness",
+                Categoria = "Treino",
+                Cor = "Preta",
+                Tamanho = "M",
+                Preco = 69.90m,
+                Estoque = 25
+            };
+
+            // =====================================================
+            // MOSTRAR TODOS OS PRODUTOS
+            // =====================================================
+
+            Console.WriteLine("========== PRODUTOS DISPONÍVEIS ==========");
+            Console.WriteLine();
+
+            camisaBrasil.ExibirDetalhes();
+            camisaFranca.ExibirDetalhes();
+            camisaArgentina.ExibirDetalhes();
+            camisaPortugal.ExibirDetalhes();
+            camisaAlemanha.ExibirDetalhes();
+            camisaEspanha.ExibirDetalhes();
+            camisaInglaterra.ExibirDetalhes();
+            camisaBelgica.ExibirDetalhes();
+
+            shortBrasil.ExibirDetalhes();
+            shortFranca.ExibirDetalhes();
+            shortArgentina.ExibirDetalhes();
+            shortPortugal.ExibirDetalhes();
+            shortAlemanha.ExibirDetalhes();
+            shortEspanha.ExibirDetalhes();
+            shortInglaterra.ExibirDetalhes();
+            shortBelgica.ExibirDetalhes();
+
+            dryFit.ExibirDetalhes();
+            camisetaTreino.ExibirDetalhes();
+            shortTreino.ExibirDetalhes();
+            regataFitness.ExibirDetalhes();
+
+            // =====================================================
+            // ADMIN
+            // =====================================================
+
+            Admin admin = new Admin();
+
+            admin.NomeAdmin = "Administrador";
+
+            admin.CadastrarProduto(camisaBrasil);
+            admin.CadastrarProduto(shortBrasil);
+            admin.CadastrarProduto(camisaEspanha);
+
+            Console.WriteLine();
+
+            // =====================================================
+            // CARRINHO
+            // =====================================================
+
+            Carrinho carrinho = new Carrinho();
+
+            carrinho.AdicionarProduto(camisaBrasil, 1);
+            carrinho.AdicionarProduto(shortBrasil, 1);
+            carrinho.AdicionarProduto(camisaEspanha, 1);
+
+            carrinho.ListarCarrinho();
+
+            // =====================================================
+            // PAGAMENTO
+            // =====================================================
+
+            Pagamento pagamento = new Pagamento();
+
+            pagamento.MetodoPagamento = "PIX";
+
+            pagamento.RealizarPagamento();
+
+            // =====================================================
+            // PEDIDO
+            // =====================================================
+
+            Pedido pedido = new Pedido();
+
+            pedido.Cliente = usuario;
+            pedido.ItensPedido = carrinho.Itens;
+            pedido.DataPedido = DateTime.Now;
+            pedido.Status = "Pagamento aprovado";
+            pedido.TotalPedido = carrinho.CalcularTotal();
+
+            pedido.FinalizarPedido();
+
+            Console.WriteLine("Sistema encerrado.");
+
+            Console.ReadLine();
         }
     }
 }
